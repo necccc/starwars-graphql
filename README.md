@@ -19,6 +19,8 @@ APOLLO_API_KEY="___YOUR APOLLO ENGINE API KEY ___"
 APOLLO_ENGINE_PORT=8000
 ```
 
+You can get a free Apollo Engine key [here](https://engine.apollographql.com/login)
+
 ## Run server
 
 ```bash
