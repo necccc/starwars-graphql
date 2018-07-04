@@ -1,7 +1,7 @@
 {
-  "name": "apollo-sandbox",
+  "name": "starwars-graphql",
   "version": "1.0.0",
-  "description": "",
+  "description": "GraphQL server using the Star Wars REST API as backend",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
