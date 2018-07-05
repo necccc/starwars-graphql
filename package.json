@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "deploy": "now -e APOLLO_API_KEY=@apollo_api_key -e APOLLO_ENGINE_PORT=@apollo_engine_port --docker",
+    "deploy": "now -e APOLLO_API_KEY=@apollo_api_key -e APOLLO_ENGINE_PORT=@apollo_engine_port --team starwars --docker",
     "build": "docker build --no-cache -t starwars-graphql .",
     "start:docker": "docker run -d -p 3000:80 -e 'NODE_ENV=production' --name starwars-graphql starwars-graphql",
     "stop:docker": "docker stop starwars-graphql && docker rm starwars-graphql",
@@ -15,10 +15,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "apollo-datasource-rest": "2.0.0-rc.0",
+    "apollo-datasource-rest": "2.0.0-rc.6",
     "apollo-engine": "1.1.2",
-    "apollo-server": "2.0.0-rc.0",
-    "apollo-server-express": "2.0.0-rc.0",
+    "apollo-server": "2.0.0-rc.6",
+    "apollo-server-express": "2.0.0-rc.6",
     "body-parser": "1.18.3",
     "express": "4.16.3",
     "graphql": "0.13.2",
