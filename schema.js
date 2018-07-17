@@ -17,7 +17,7 @@ module.exports = gql`
 		id: ID
 	}
 
-  type Person implements Node@cacheControl(maxAge: 240) {
+  	type Person implements Node@cacheControl(maxAge: 240) {
 		id: ID
 		name: String
 		picture: String
@@ -27,16 +27,22 @@ module.exports = gql`
 		mass: String
 		skin_color: String
 		birth_year: String
-		starships(first: Int = 6 offset: Int = 0): [Starship]
-		_starshipsMeta: _PaginatedPropertyMeta
 		homeworld: Planet
+		starships(first: Int = 6 offset: Int = 0): [Starship]
+		starshipsCount: Int
 		species(first: Int = 6 offset: Int = 0): [Species]
-		_speciesMeta: _PaginatedPropertyMeta
+		speciesCount: Int
 		vehicles(first: Int = 6 offset: Int = 0): [Vehicle]
-		_vehiclesMeta: _PaginatedPropertyMeta
-  }
+		vehiclesCount: Int
+  	}
 
-  type Starship implements Node@cacheControl(maxAge: 3600) {
+  	type personPages@cacheControl(maxAge: 3600)  {
+		page: Int!,
+		count: Int!
+		items: [Person]
+  	}
+
+  	type Starship implements Node@cacheControl(maxAge: 3600) {
 		id: ID
 		name: String
 		model: String
@@ -51,10 +57,16 @@ module.exports = gql`
 		MGLT: String
 		picture: String
 		pilots(first: Int = 6 offset: Int = 0): [Person]
-		_pilotsMeta: _PaginatedPropertyMeta
-  }
+		pilotsCount: Int
+  	}
 
-  type Vehicle@cacheControl(maxAge: 3600) {
+  	type starshipPages@cacheControl(maxAge: 3600)  {
+		page: Int!,
+		count: Int!
+		items: [Starship]
+ 	}
+
+  	type Vehicle@cacheControl(maxAge: 3600) {
 		id: ID
 		name: String
 		model: String
@@ -66,10 +78,17 @@ module.exports = gql`
 		consumables: String
 		picture: String
 		pilots(first: Int = 6 offset: Int = 0): [Person]
-		_pilotsMeta: _PaginatedPropertyMeta
-  }
+		pilotsCount: Int
+  	}
 
-  type Planet implements Node@cacheControl(maxAge: 3600) {
+  	type vehiclePages@cacheControl(maxAge: 3600)  {
+		page: Int!,
+		count: Int!
+		items: [Vehicle]
+  	}
+
+
+  	type Planet implements Node@cacheControl(maxAge: 3600) {
 		id: ID
 		name: String
 		terrain: String
@@ -82,10 +101,16 @@ module.exports = gql`
 		surface_water: String
 		picture: String
 		residents(first: Int = 6 offset: Int = 0): [Person]
-		_residentsMeta: _PaginatedPropertyMeta
-  }
+		residentsCount: Int
+  	}
 
-  type Species implements Node@cacheControl(maxAge: 3600) {
+  	type planetPages@cacheControl(maxAge: 3600)  {
+		page: Int!,
+		count: Int!
+		items: [Planet]
+  	}
+
+  	type Species implements Node@cacheControl(maxAge: 3600) {
 		id: ID
 		name: String
 		classification: String
@@ -96,27 +121,27 @@ module.exports = gql`
 		average_lifespan: String
 		picture: String
 		people(first: Int = 6 offset: Int = 0): [Person]
-		_peopleMeta: _PaginatedPropertyMeta
-  }
+		peopleCount: Int
+	}
 
+	type speciesPages@cacheControl(maxAge: 3600)  {
+		page: Int!,
+		count: Int!
+		items: [Species]
+	}
 
-  # The "Query" type is the root of all GraphQL queries.
-  # (A "Mutation" type will be covered later on.)
-  type Query {
+  	# The "Query" type is the root of all GraphQL queries.
+  	# (A "Mutation" type will be covered later on.)
+  	type Query {
 		Person(id: ID): Person
-		allPersons(page:Int): [Person]
-		_allPersonsMeta: _QueryMeta
+		personPages(page: Int): personPages
 		Starship(id: ID): Starship
-		allStarships(page:Int): [Starship]
-		_allStarshipsMeta: _QueryMeta
+		starshipPages(page: Int): starshipPages
 		Vehicle(id: ID): Vehicle
-		allVehicles(page:Int): [Vehicle]
-		_allVehiclesMeta: _QueryMeta
+		vehiclePages(page: Int): vehiclePages
 		Planet(id: ID): Planet
-		allPlanets(page:Int): [Planet]
-		_allPlanetsMeta: _QueryMeta
+		planetPages(page: Int): planetPages
 		Species(id: ID): Species
-		allSpecies(page:Int): [Species]
-		_allSpeciesMeta: _QueryMeta
+		speciesPages(page: Int): speciesPages
 	}
 `;

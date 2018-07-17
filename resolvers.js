@@ -28,7 +28,8 @@ const getImageUrl = function (method, id) {
 
 const getItemListWithID = async (dataSources, getMethod, page) => {
 	const data = await dataSources.starWars[getMethod](page)
-	return data.results.map(item => {
+	const count = data.count
+	const items = data.results.map(item => {
 		const id = item.url.match(/\d+\d*/)[0]
 
 		item.id = createId(getMethod, id)
@@ -36,6 +37,12 @@ const getItemListWithID = async (dataSources, getMethod, page) => {
 
 		return item
 	})
+
+	return {
+		count,
+		page,
+		items
+	}
 }
 
 const getListMeta = async (dataSources, getMethod) => {
@@ -70,10 +77,10 @@ const getList = async (restUrls, getMethod, dataSources, args) => {
 	return data
 }
 
-const getSubListMeta = async (restUrls, metaField) => {
+const getSubListCount = async (restUrls, metaField) => {
 	const count = restUrls.length
 
-	return { count }
+	return count
 }
 
 const getItem = async (restUrl, getMethod, dataSources) => {
@@ -89,74 +96,59 @@ module.exports = {
 	  	Person: (_, { id }, { dataSources }) => {
 			return getItemWithID(dataSources, 'getPerson', id)
 	  	},
-	  	allPersons: (_, { page }, { dataSources }) => {
+	  	personPages: (_, { page }, { dataSources }) => {
 			return getItemListWithID(dataSources, 'getPersonList', page)
-		},
-		_allPersonsMeta: (_, args, { dataSources }) => {
-			return getListMeta(dataSources, 'getPersonList')
 		},
 	  	Starship: (_, { id }, { dataSources }) => {
 			return getItemWithID(dataSources, 'getStarship', id)
 	  	},
-	  	allStarships: (_, { page }, { dataSources }) => {
+	  	starshipPages: (_, { page }, { dataSources }) => {
 			return getItemListWithID(dataSources, 'getStarshipList', page)
-		},
-		_allStarshipsMeta: (_, args, { dataSources }) => {
-			return getListMeta(dataSources, 'getStarshipList')
 		},
 	  	Vehicle: (_, { id }, { dataSources }) => {
 			return getItemWithID(dataSources, 'getVehicle', id)
 	  	},
-	  	allVehicles: (_, { page }, { dataSources }) => {
+	  	vehiclePages: (_, { page }, { dataSources }) => {
 			return getItemListWithID(dataSources, 'getVehicleList', page)
-		},
-		_allVehiclesMeta: (_, args, { dataSources }) => {
-			return getListMeta(dataSources, 'getVehicleList')
 		},
 	  	Planet: (_, { id }, { dataSources }) => {
 			return getItemWithID(dataSources, 'getPlanet', id)
 	  	},
-	  	allPlanets: (_, { page }, { dataSources }) => {
+	  	planetPages: (_, { page }, { dataSources }) => {
 			return getItemListWithID(dataSources, 'getPlanetList', page)
-		},
-		_allPlanetsMeta: (_, args, { dataSources }) => {
-			return getListMeta(dataSources, 'getPlanetList')
 		},
 	  	Species: (_, { id }, { dataSources }) => {
 			return getItemWithID(dataSources, 'getSpecies', id)
 	  	},
-	  	allSpecies: (_, { page }, { dataSources }) => {
+	  	speciesPages: (_, { page }, { dataSources }) => {
 			return getItemListWithID(dataSources, 'getSpeciesList', page)
-		},
-		_allSpeciesMeta: (_, args, { dataSources }) => {
-			return getListMeta(dataSources, 'getSpeciesList')
 		},
 	},
 	Person: {
 	  starships: ({ starships }, { first, offset }, { dataSources }) => getList(starships, 'getStarship', dataSources, { first, offset }),
-	  _starshipsMeta: ({ starships }) => getSubListMeta(starships, '_starshipsMeta'),
+	  starshipsCount: ({ starships }) => getSubListCount(starships, '_starshipsMeta'),
 	  homeworld: ({ homeworld }, _, { dataSources }) => getItem(homeworld, 'getPlanet', dataSources),
 	  species: ({ species }, { first, offset }, { dataSources }) => getList(species, 'getSpecies', dataSources, { first, offset }),
-	  _speciesMeta: ({ species }) => getSubListMeta(species, '_speciesMeta'),
+	  speciesCount: ({ species }) => getSubListCount(species, '_speciesMeta'),
 	  vehicles: ({ vehicles }, { first, offset }, { dataSources }) => getList(vehicles, 'getVehicle', dataSources, { first, offset }),
-	  _vehiclesMeta: ({ vehicles }) => getSubListMeta(vehicles, '_vehiclesMeta'),
+	  vehiclesCount: ({ vehicles }) => getSubListCount(vehicles, '_vehiclesMeta'),
 	},
 	Starship: {
 		pilots: ({ pilots }, { first, offset }, { dataSources }) => getList(pilots, 'getPerson', dataSources, { first, offset }),
-		_pilotsMeta: ({ pilots }) => getSubListMeta(pilots, '_pilotsMeta'),
+		pilotsCount: ({ pilots }) => getSubListCount(pilots, '_pilotsMeta'),
 	},
 	Vehicle: {
 		pilots: ({ pilots }, { first, offset }, { dataSources }) => getList(pilots, 'getPerson', dataSources, { first, offset }),
-		_pilotsMeta: ({ pilots }) => getSubListMeta(pilots, '_pilotsMeta'),
+		pilotsCount: ({ pilots }) => getSubListCount(pilots, '_pilotsMeta'),
 	},
 	Planet: {
 		residents: ({ residents }, { first, offset }, { dataSources }) => getList(residents, 'getPerson', dataSources, { first, offset }),
-		_residentsMeta: ({ residents }) => getSubListMeta(residents, '_residentsMeta'),
+		residentsCount: ({ residents }) => getSubListCount(residents, '_residentsMeta'),
 	},
 	Species: {
 		homeworld: ({ homeworld }, _, { dataSources }) => getItem(homeworld, 'getPlanet', dataSources),
 		people: ({ people }, { first, offset }, { dataSources }) => getList(people, 'getPerson', dataSources, { first, offset }),
-		_peopleMeta: ({ people }) => getSubListMeta(people, '_peopleMeta'),
+		peopleCount: ({ people }) => getSubListCount(people, '_peopleMeta'),
 	},
 	Node: {
 		__resolveType(obj, context, info) {

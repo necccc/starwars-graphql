@@ -1,6 +1,6 @@
 # starwars-graphql
 
-GraphQL server using the [Star Wars REST API](https://swapi.co) as backend. Currently deployed to now, you can [play with it here](https://starwars-graphql-rjywaqeein.now.sh/graphql)
+GraphQL server using the [Star Wars REST API](https://swapi.co) as backend. Currently deployed to now, you can [play with it here](https://starwars-graphql-rcbovadktx.now.sh/graphql)
 
 ## Install
 
