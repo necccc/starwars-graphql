@@ -26,7 +26,7 @@ const getImageUrl = function (method, id) {
 	return imageHost + imageMap[kind].replace('ID', id)
 }
 
-const getItemListWithID = async (dataSources, getMethod, page) => {
+const getItemListWithID = async (dataSources, getMethod, page = 1) => {
 	const data = await dataSources.starWars[getMethod](page)
 	const count = data.count
 	const items = data.results.map(item => {
